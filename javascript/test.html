@@ -8,10 +8,10 @@
 <script type = "text/javascript">
     Client.env.platform = 'android'
     Client.env.isClient = 1
-    Ajax.scookie = unescape("0%7C3009218591%7Cc63cf4d916ab69a0b3515335b0f080c8%7C145694224%7Cd493335dc211dda1bd86e60fa4c815e9%7C3009218591")
-    //Ajax.scookie = unescape("")//必填项
-    var deviceid = "75e4bf0e9c3ff208"
-    //var deviceid = ""//必填项
+    Ajax.scookie = unescape("*****")
+    //Ajax.scookie = unescape("这里填scookie参数")//必填项
+    var deviceid = "*****"
+    //var deviceid = "这里填deviceid参数"//必填项
     Ajax.hdid = 22
     var id
 </script>
@@ -22,7 +22,7 @@
 <button type="button" onclick="stop()">STOP</button>
 <script type = "text/javascript">
     function start() {
-        id = setInterval(login, 40)
+        id = setInterval(login, 40)//开始循环发包
     }
     function stop() {
         clearInterval(id)
@@ -33,7 +33,7 @@
                 ac:'prizeRand',
                 rand:Math.random(),
                 device:deviceid,
-                days:31,
+                days:31,//这里填要抢的奖品日期
                 c:"",
                 hdid:Ajax.hdid
             },
