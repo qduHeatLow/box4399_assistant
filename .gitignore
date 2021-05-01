@@ -10,6 +10,7 @@ confs/*.ini
 
 # Backup file
 *.zip
+*.rar
 
 # Virtual environment
 venv/
