@@ -1,0 +1,15 @@
+# About IDE
+.idea/
+__pycache__/
+
+# Secret file
+confs/*.ini
+
+# Log file
+*.log
+
+# Backup file
+*.zip
+
+# Virtual environment
+venv/
