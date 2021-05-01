@@ -1,9 +1,9 @@
 # About IDE
-.idea/
-__pycache__/
+*.idea/
+*__pycache__/
 
 # Secret file
-confs/*.ini
+*confs/*.ini
 
 # Log file
 *.log
