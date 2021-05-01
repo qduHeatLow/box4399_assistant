@@ -4,6 +4,7 @@
 
 # Secret file
 *confs/*.ini
+*.pyd
 
 # Log file
 *.log
