@@ -8,6 +8,10 @@
 Python为主
 
 #### 仓库结构介绍
+##### 抓包教程 folder
+- 包含了针对该场景的、简单的fiddler抓包教学
+- 将抓到的封包放入解析工具进行解析即可
+
 ##### python-mainstream folder
 - 包含了可以正常使用的python脚本
 - 包含以下功能：
