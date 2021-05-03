@@ -12,6 +12,9 @@ import logging
 
 class Box:
     def __init__(self, name, cookies, headers, scookie, device, sdevice, gameid):
+        self.url_signchart = 'https://www.mobayx.com/comm/qdlb/ajax_e2.php'
+        self.url_getcard = 'https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php'
+
         self.name = name
         if os.path.exists('.\confs\logs'):
             pass
@@ -57,7 +60,7 @@ class Box:
             'device': self.device,
             'sdevice': self.sdevice
         }
-        response = requests.post('https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php', headers=self.headers,
+        response = requests.post(self.url_getcard, headers=self.headers,
                                  cookies=self.cookies, data=data)
         content = json.loads(response.text)
         if content['name'] == '':
@@ -97,7 +100,7 @@ class Box:
                     'device': self.device,
                     'sdevice': self.sdevice
                 }
-                response = requests.post('https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php',
+                response = requests.post(self.url_getcard,
                                          headers=self.headers,
                                          cookies=self.cookies, data=data)
                 maxsec = maxsec if maxsec > int(self.delay_time[gid])/1000 else int(self.delay_time[gid])/1000
@@ -122,7 +125,7 @@ class Box:
             'device': self.device,
             'sdevice': self.sdevice
         }
-        response = requests.post('https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php',
+        response = requests.post(self.url_getcard,
                                  headers=self.headers,
                                  cookies=self.cookies, data=data)
         content = json.loads(response.text)
@@ -187,7 +190,7 @@ class Box:
         }
         while True:
             try:
-                response = requests.post('https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php',
+                response = requests.post(self.url_getcard,
                                          headers=self.headers,
                                          cookies=self.cookies, data=data)
                 content = json.loads(response.text)
@@ -218,7 +221,7 @@ class Box:
             'sdevice': self.sdevice
         }
         try:
-            response = requests.post('https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php',
+            response = requests.post(self.url_getcard,
                                      headers=self.headers,
                                      cookies=self.cookies, data=data)
             content = json.loads(response.text)
@@ -252,7 +255,7 @@ class Box:
                 ('device', self.device),
                 ('scookie', self.scookie)
             )
-            response = requests.get('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers, params=params,
+            response = requests.get(self.url_signchart, headers=self.headers, params=params,
                                     cookies=self.cookies)
             content = json.loads(response.text)
             logging.info("【" + self.name + "】" + response.content.decode('unicode-escape'))
@@ -284,7 +287,7 @@ class Box:
                     'scookie': self.scookie
                 }
                 logging.info("【" + self.name + "】尝试签到本月{}日。。。".format(t))
-                response = requests.post('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers,
+                response = requests.post(self.url_signchart, headers=self.headers,
                                          cookies=self.cookies,
                                          data=data)
                 content = json.loads(response.text)
@@ -303,7 +306,7 @@ class Box:
                     'status': '1',
                     'scookie': self.scookie
                 }
-                response = requests.post('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers,
+                response = requests.post(self.url_signchart, headers=self.headers,
                                          cookies=self.cookies,
                                          data=data)
                 content = json.loads(response.text)
@@ -327,7 +330,7 @@ class Box:
             ('device', self.device),
             ('scookie', self.scookie)
         )
-        response = requests.get('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers, params=params,
+        response = requests.get(self.url_signchart, headers=self.headers, params=params,
                                 cookies=self.cookies)
         content = json.loads(response.text)
         logging.info("【" + self.name + "】" + response.content.decode('unicode-escape'))
@@ -355,7 +358,7 @@ class Box:
                 'status': 'undefined',
                 'scookie': self.scookie
             }
-            response = requests.post('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers,
+            response = requests.post(self.url_signchart, headers=self.headers,
                                      cookies=self.cookies,
                                      data=data)
             content = json.loads(response.text)
@@ -374,7 +377,7 @@ class Box:
                 'status': '1',
                 'scookie': self.scookie
             }
-            response = requests.post('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers,
+            response = requests.post(self.url_signchart, headers=self.headers,
                                      cookies=self.cookies,
                                      data=data)
             content = json.loads(response.text)
@@ -404,7 +407,7 @@ class Box:
             ('device', self.device),
             ('scookie', self.scookie)
         )
-        response = requests.get('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers, params=params,
+        response = requests.get(self.url_signchart, headers=self.headers, params=params,
                                 cookies=self.cookies)
         content = json.loads(response.text)
         logging.info("【" + self.name + "】" + response.content.decode('unicode-escape'))
@@ -429,7 +432,7 @@ class Box:
                 'hdid': hdid,
                 'scookie': self.scookie
             }
-            response = requests.post('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers,
+            response = requests.post(self.url_signchart, headers=self.headers,
                                      cookies=self.cookies,
                                      data=data)
             content = json.loads(response.text)

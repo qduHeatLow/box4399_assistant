@@ -138,7 +138,7 @@ class Box:
                 ('device', self.device[x]),
                 ('scookie', self.scookie[x])
             )
-            response = requests.get('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers[x], params=params,
+            response = requests.get('https://www.mobayx.com/comm/qdlb/ajax_e2.php', headers=self.headers[x], params=params,
                                     cookies=self.cookies[x])
             content = json.loads(response.text)
             asyncio.create_task(
@@ -217,6 +217,6 @@ class Box:
                 asyncio.create_task(self.post(x, data))
 
     async def post(self,x,data):
-        response = requests.post('https://www.mobayx.com/comm/qdlb/ajax.php', headers=self.headers[x],
+        response = requests.post('https://www.mobayx.com/comm/qdlb/ajax_e2.php', headers=self.headers[x],
                       cookies=self.cookies[x], data=data)
         print(response.text)
