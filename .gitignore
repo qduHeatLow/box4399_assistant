@@ -15,3 +15,6 @@
 
 # Virtual environment
 venv/
+
+# Nothing important
+*/gzip.dll
