@@ -5,7 +5,7 @@
 
 ![找到Script文件夹](./img/1.png)
 
-3. 将插件(fd快速抓包插件.dll,**不能使用的话自行改名为4399_JS.dll**)复制到这个文件夹中
+3. 将插件([fd快速抓包插件.dll](https://gitee.com/in_dream_m/box4399_assistant/blob/master/抓包教程/fd快速抓包插件.dll),**不能使用的话自行改名为4399_JS.dll**)复制到这个文件夹中
 
 ![复制文件](./img/2.png)
 
