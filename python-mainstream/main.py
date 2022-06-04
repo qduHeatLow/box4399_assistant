@@ -26,4 +26,3 @@ if __name__ == '__main__':
         # run_program(item)
         threading.Thread(target=run_program, args=(item,)).start()
 
-

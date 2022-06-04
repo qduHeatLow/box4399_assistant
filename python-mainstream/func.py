@@ -12,8 +12,9 @@ import logging
 
 class Box:
     def __init__(self, name, cookies, headers, scookie, device, sdevice, gameid):
-        self.url_signchart = 'https://www.mobayx.com/comm/qdlb/ajax_e2.php'
-        self.url_getcard = 'https://www.mobayx.com/2016/signcart2/hd_wap_user_e13.php'
+
+        self.url_signchart = 'https://huodong2.4399.com/comm/qdlb/ajax_e3.php'
+        self.url_getcard = 'https://huodong2.4399.com/2016/signcart2/hd_wap_user_e13.php?1'
 
         self.name = name
         if os.path.exists('.\confs\logs'):
@@ -31,17 +32,31 @@ class Box:
                             )
         logging.info("【" + self.name + "】初始化成功！")
         self.cookies = {}
-        self.headers = {}
+
+        self.headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 11; GM1910 Build/RKQ1.201022.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/87.0.4280.141 Mobile Safari/537.36 4399GameCenter/6.6.1.31(android;GM1910;11;1440x3060;4G;1747.795;baidu)",
+                        "Content-Type":"application/x-www-form-urlencoded",
+                        "Sec-Fetch-Site":"same-origin",
+                        "Sec-Fetch-Mode": "cors",
+                        "Sec-Fetch-Dest": "empty",
+                        "Referer": "https://huodong2.4399.com/2016/signcart2/",
+                        "Accept-Encoding": "gzip, deflate",
+                        "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+                        }
+        self.headers={}
         cok = re.findall(r'([^=]+)=([^;]+)[ ;]*', parse.unquote(cookies))
-        hed = re.findall(r'([^:]+): ([^\n]+)[\n]*', parse.unquote(headers.replace('。', '\n')))
+        hed = re.findall(r'([^:]+): ([^\n]+)[\n]*', parse.unquote(headers.replace('#', '\n')))
         for item in cok:
             self.cookies[item[0]] = item[1]
         for item in hed:
-            self.headers[item[0]] = item[1]
+           self.headers[item[0]] = item[1]
         self.scookie = parse.unquote(scookie)
+        #self.scookie = "0%7C644844046%7C05c477b1a39f7b88358b9e02d3627841%7C1a4131816%7C3de356aeebe97d7e0dfcd80026ccb552%7C644844046"
+
         self.device = parse.unquote(device)
         self.sdevice = parse.unquote(sdevice)
         self.gameid = gameid
+
+        print(self.headers)
         # 以下是部分全局变量
         self.num = []
         self.names = []
@@ -62,11 +77,16 @@ class Box:
         }
         response = requests.post(self.url_getcard, headers=self.headers,
                                  cookies=self.cookies, data=data)
+
+        print(response.request.headers)
         content = json.loads(response.text)
+
         if content['name'] == '':
             logging.error('【' + self.name + '】未获取到有效用户名！')
         else:
+            
             logging.info('【' + self.name + '】用户:{} 调用login成功！'.format(content['name']))
+        print(content)
         list = content['config']
         self.names = []
         self.num = []
