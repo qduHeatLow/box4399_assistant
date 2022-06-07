@@ -206,108 +206,111 @@ class Box:
                 return True
 
     def hebi(self):
-        cid = 637
-        self.login_with_cid(cid)
-        flag = 1
-        games = ""
-        maxsec = 0
-        """for gid in self.num:
-            if self.stat[gid] == '0':
-        """
-        code,key = self.check()
-        data = {
-            'ac': 'checkindentify',
-            'cid':cid,
-            'codekey': key,
-            'code': code,
-            't': time.strftime('%Y-%m-%d'),
-            'r': random.random(),
-            'scookie': self.scookie,
-            'device': self.device,
-            'sdevice': self.sdevice
-        }
-        response = requests.post(self.url_qingqu_check_upload,
-                                 headers=self.headers,
-                                 cookies=self.cookies, data=data)
-        print(response.text)
+        #626 - 640
+        #cid = 637
 
-        data = {
-            'ac': 'download',
-            'cid': cid,
-            't': time.strftime('%Y-%m-%d'),
-            'r': random.random(),
-            'scookie': self.scookie,
-            'device': self.device,
-            'sdevice': self.sdevice
-        }
-        response = requests.post(self.url_hebi,
-                                 headers=self.headers,
-                                 cookies=self.cookies, data=data)
-        print(response.text)
 
-        data = {
-            'ac': 'clickplay',
-            'cid': cid,
-            't': time.strftime('%Y-%m-%d'),
-            'r': random.random(),
-            'scookie': self.scookie,
-            'device': self.device,
-            'sdevice': self.sdevice
-        }
-        response = requests.post(self.url_hebi,
-                                 headers=self.headers,
-                                 cookies=self.cookies, data=data)
-        print(response.text)
 
-        """
-        maxsec = maxsec if maxsec > int(self.delay_time[gid]) / 1000 else int(self.delay_time[gid]) / 1000
-        logging.info("【" + self.name + "】编号{}，{}:签到发包成功".format(gid, self.compare[gid]))
-        time.sleep(1)
+        for cid in range(626,641):
+            self.login_with_cid(cid)
+            data = {
+                'ac': 'download',
+                'cid': cid,
+                't': time.strftime('%Y-%m-%d'),
+                'r': random.random(),
+                'scookie': self.scookie,
+                'device': self.device,
+                'sdevice': self.sdevice
+            }
+            response = requests.post(self.url_hebi,
+                                     headers=self.headers,
+                                     cookies=self.cookies, data=data)
+            print(response.text)
 
-            else:
-                logging.info('【' + self.name + '】编号{}，{}：该游戏已签到'.format(gid, self.compare[gid]))
-            if gid == self.num[-1]:
-                games = games + str(gid)
-            else:
-                games = games + str(gid) + "|"
+            data = {
+                'ac': 'clickplay',
+                'cid': cid,
+                't': time.strftime('%Y-%m-%d'),
+                'r': random.random(),
+                'scookie': self.scookie,
+                'device': self.device,
+                'sdevice': self.sdevice
+            }
+            response = requests.post(self.url_hebi,
+                                     headers=self.headers,
+                                     cookies=self.cookies, data=data)
+            print(response.text)
 
-        logging.info('【' + self.name + '】请等待{}秒'.format(maxsec))
-        
-        """
+            """
+            maxsec = maxsec if maxsec > int(self.delay_time[gid]) / 1000 else int(self.delay_time[gid]) / 1000
+            logging.info("【" + self.name + "】编号{}，{}:签到发包成功".format(gid, self.compare[gid]))
+            time.sleep(1)
+    
+                else:
+                    logging.info('【' + self.name + '】编号{}，{}：该游戏已签到'.format(gid, self.compare[gid]))
+                if gid == self.num[-1]:
+                    games = games + str(gid)
+                else:
+                    games = games + str(gid) + "|"
+    
+            logging.info('【' + self.name + '】请等待{}秒'.format(maxsec))
+            
+            """
+        print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
         time.sleep(480)
-        data = {
-            'ac': 'playtime',
-            'cid': cid,
-            't': time.strftime('%Y-%m-%d'),
-            'r': random.random(),
-            'scookie': self.scookie,
-            'device': self.device,
-            'sdevice': self.sdevice
-        }
-        response = requests.post(self.url_hebi,
-                                 headers=self.headers,
-                                 cookies=self.cookies, data=data)
-        print(response.text)
 
-        #content = json.loads(response.text)
+        for cid in range(626, 631):
+            code, key = self.check()
+            data = {
+                'ac': 'checkindentify',
+                'cid': cid,
+                'codekey': key,
+                'code': code,
+                't': time.strftime('%Y-%m-%d'),
+                'r': random.random(),
+                'scookie': self.scookie,
+                'device': self.device,
+                'sdevice': self.sdevice
+            }
+            response = requests.post(self.url_qingqu_check_upload,
+                                     headers=self.headers,
+                                     cookies=self.cookies, data=data)
+            print(response.text)
+
+
+            data = {
+                'ac': 'playtime',
+                'cid': cid,
+                't': time.strftime('%Y-%m-%d'),
+                'r': random.random(),
+                'scookie': self.scookie,
+                'device': self.device,
+                'sdevice': self.sdevice
+            }
+            response = requests.post(self.url_hebi,
+                                     headers=self.headers,
+                                     cookies=self.cookies, data=data)
+            print(response.text)
+
+            #content = json.loads(response.text)
 
 
 
-        data = {
-            'ac': 'lingqu',
-            'cid': cid,
-            't': time.strftime('%Y-%m-%d'),
-            'r': random.random(),
-            'smid':self.smid,
-            'scookie': self.scookie,
-            'device': self.device,
-            'sdevice': self.sdevice
-        }
-        response = requests.post(self.url_hebi,
-                                 headers=self.headers,
-                                 cookies=self.cookies, data=data)
-        content = json.loads(response.text)
-        print(response.text)
+            data = {
+                'ac': 'lingqu',
+                'cid': cid,
+                't': time.strftime('%Y-%m-%d'),
+                'r': random.random(),
+                'smid':self.smid,
+                'scookie': self.scookie,
+                'device': self.device,
+                'sdevice': self.sdevice
+            }
+            response = requests.post(self.url_hebi,
+                                     headers=self.headers,
+                                     cookies=self.cookies, data=data)
+            content = json.loads(response.text)
+            print(response.text)
 
         """
         for gid in self.num:
