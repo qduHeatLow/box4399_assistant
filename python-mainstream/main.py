@@ -8,10 +8,15 @@ def run_program(name):
     conf = RawConfigParser()
     conf.read('.\confs\\' + name)
     box = Box(name, conf.get("essential", "cookies"), conf.get("essential", "headers"),
+              conf.get("essential", "smid"),
               conf.get("essential", "scookie"),
               conf.get("essential", "device"), conf.get("essential", "sdevice"), conf.get("essential", "gameid"))
-    box.detect_accelerate()  # 检查加速卡状态，全自动线程
-    box.playgame()  # 自动签到拿积分
+    box.hebi()
+
+
+
+    #box.detect_accelerate()  # 检查加速卡状态，全自动线程
+    #box.playgame()  # 自动签到拿积分
     # con.test_prize()
 
 

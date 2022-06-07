@@ -11,12 +11,15 @@ import logging
 
 
 class Box:
-    def __init__(self, name, cookies, headers, scookie, device, sdevice, gameid):
+    def __init__(self, name, cookies, headers, smid,scookie, device, sdevice, gameid):
 
         self.url_signchart = 'https://huodong2.4399.com/comm/qdlb/ajax_e3.php'
         self.url_getcard = 'https://huodong2.4399.com/2016/signcart2/hd_wap_user_e13.php?1'
-
+        self.url_hebi = 'https://huodong2.4399.com/comm/playapp2/m/hd_wap_user_e4.php'
+        self.url_lingqu_check ="https://huodong2.4399.com/identifying_code/identifyCode.https.api.php?ac=pic&type=4&randkey=lingqu&reflash=1"
+        self.url_qingqu_check_upload="https://huodong2.4399.com/comm/playapp2/m/hd_wap_user_e4.php"
         self.name = name
+
         if os.path.exists('.\confs\logs'):
             pass
         else:
@@ -51,6 +54,8 @@ class Box:
            self.headers[item[0]] = item[1]
         self.scookie = parse.unquote(scookie)
         #self.scookie = "0%7C644844046%7C05c477b1a39f7b88358b9e02d3627841%7C1a4131816%7C3de356aeebe97d7e0dfcd80026ccb552%7C644844046"
+        #self.scookie = parse.unquote(smid)
+        self.smid = "202206041012485a32a4dd22c05b95978ae817551fec59006f26ff7e9ea7c90"
 
         self.device = parse.unquote(device)
         self.sdevice = parse.unquote(sdevice)
@@ -64,7 +69,7 @@ class Box:
         day_of_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         self.total_day = day_of_month[int(time.strftime("%m", time.localtime()))]
 
-        self.login()
+        #self.login()
 
     def login(self):
         data = {
@@ -104,6 +109,45 @@ class Box:
         self.delay_time = list['ios_delay_time']
         self.compare = dict(zip(self.num, self.names))
 
+    def login_with_cid(self,cid):
+        data = {
+            'ac': 'login',
+            'cid':cid,
+            't': time.strftime('%Y-%m-%d'),
+            'r': random.random(),
+            'scookie': self.scookie,
+            'device': self.device,
+            'sdevice': self.sdevice
+        }
+        response = requests.post(self.url_hebi, headers=self.headers,
+                                 cookies=self.cookies, data=data)
+
+        print(response.request.headers)
+        content = json.loads(response.text)
+
+        if content['name'] == '':
+            logging.error('【' + self.name + '】未获取到有效用户名！')
+        else:
+            logging.info('【' + self.name + '】用户:{} 调用login成功！'.format(content['name']))
+        print(content)
+        list = content['config']
+        self.names = []
+        self.num = []
+
+
+        """for item in list['gameinfo_list']:
+            if type(item) == str:
+                tmp = list['gameinfo_list']
+                tmp = tmp[item]
+                cont = tmp['gameinfo']
+            elif type(item) == dict:
+                cont = item['gameinfo']
+            self.num.append(cont['id'])
+            self.names.append(cont['packag'])
+        self.stat = list['play_stat']
+        self.delay_time = list['ios_delay_time']
+        self.compare = dict(zip(self.num, self.names))
+        """
     def playgame(self):
         flag = 1
         self.login()
@@ -160,6 +204,144 @@ class Box:
             logging.error("【" + self.name + "】存在应用签到失败，重新执行签到任务！")
             if self.playgame():
                 return True
+
+    def hebi(self):
+        cid = 637
+        self.login_with_cid(cid)
+        flag = 1
+        games = ""
+        maxsec = 0
+        """for gid in self.num:
+            if self.stat[gid] == '0':
+        """
+        code,key = self.check()
+        data = {
+            'ac': 'checkindentify',
+            'cid':cid,
+            'codekey': key,
+            'code': code,
+            't': time.strftime('%Y-%m-%d'),
+            'r': random.random(),
+            'scookie': self.scookie,
+            'device': self.device,
+            'sdevice': self.sdevice
+        }
+        response = requests.post(self.url_qingqu_check_upload,
+                                 headers=self.headers,
+                                 cookies=self.cookies, data=data)
+        print(response.text)
+
+        data = {
+            'ac': 'download',
+            'cid': cid,
+            't': time.strftime('%Y-%m-%d'),
+            'r': random.random(),
+            'scookie': self.scookie,
+            'device': self.device,
+            'sdevice': self.sdevice
+        }
+        response = requests.post(self.url_hebi,
+                                 headers=self.headers,
+                                 cookies=self.cookies, data=data)
+        print(response.text)
+
+        data = {
+            'ac': 'clickplay',
+            'cid': cid,
+            't': time.strftime('%Y-%m-%d'),
+            'r': random.random(),
+            'scookie': self.scookie,
+            'device': self.device,
+            'sdevice': self.sdevice
+        }
+        response = requests.post(self.url_hebi,
+                                 headers=self.headers,
+                                 cookies=self.cookies, data=data)
+        print(response.text)
+
+        """
+        maxsec = maxsec if maxsec > int(self.delay_time[gid]) / 1000 else int(self.delay_time[gid]) / 1000
+        logging.info("【" + self.name + "】编号{}，{}:签到发包成功".format(gid, self.compare[gid]))
+        time.sleep(1)
+
+            else:
+                logging.info('【' + self.name + '】编号{}，{}：该游戏已签到'.format(gid, self.compare[gid]))
+            if gid == self.num[-1]:
+                games = games + str(gid)
+            else:
+                games = games + str(gid) + "|"
+
+        logging.info('【' + self.name + '】请等待{}秒'.format(maxsec))
+        
+        """
+        time.sleep(480)
+        data = {
+            'ac': 'playtime',
+            'cid': cid,
+            't': time.strftime('%Y-%m-%d'),
+            'r': random.random(),
+            'scookie': self.scookie,
+            'device': self.device,
+            'sdevice': self.sdevice
+        }
+        response = requests.post(self.url_hebi,
+                                 headers=self.headers,
+                                 cookies=self.cookies, data=data)
+        print(response.text)
+
+        #content = json.loads(response.text)
+
+
+
+        data = {
+            'ac': 'lingqu',
+            'cid': cid,
+            't': time.strftime('%Y-%m-%d'),
+            'r': random.random(),
+            'smid':self.smid,
+            'scookie': self.scookie,
+            'device': self.device,
+            'sdevice': self.sdevice
+        }
+        response = requests.post(self.url_hebi,
+                                 headers=self.headers,
+                                 cookies=self.cookies, data=data)
+        content = json.loads(response.text)
+        print(response.text)
+
+        """
+        for gid in self.num:
+            if content['play_stat'][gid] == '0':
+                flag = 0
+        if flag:
+            logging.info("【" + self.name + "】所有签到结束！当前积分：{}".format(content['mark']))
+            return True
+        else:
+            logging.error("【" + self.name + "】存在应用签到失败，重新执行签到任务！")
+            if self.playgame():
+                return True
+        """
+    def check(self):
+        response = requests.get(self.url_lingqu_check,
+                                 headers=self.headers,
+                                 cookies=self.cookies)
+        print(response.text)
+        content = json.loads(response.text)
+        url = content['img']
+        key = content['key']
+        print(url)
+        """
+        import urllib.request
+        try:
+            urllib.request.urlretrieve(url, filename="code.jpg")
+        except IOError as e:
+            print("IOE ERROR")
+        except Exception as e:
+            print("Exception")
+        """
+
+        code = input()
+        return code,key
 
     def detect_accelerate(self):
         logging.info("【" + self.name + "】启动加速卡监视线程！")
