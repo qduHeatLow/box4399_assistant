@@ -1,3 +1,4 @@
+from ocr import Xunfei
 import requests
 import time
 import random
@@ -12,7 +13,7 @@ import logging
 
 class Box:
     def __init__(self, name, cookies, headers, smid,scookie, device, sdevice, gameid):
-
+        self.xunfei = Xunfei()
         self.url_signchart = 'https://huodong2.4399.com/comm/qdlb/ajax_e3.php'
         self.url_getcard = 'https://huodong2.4399.com/2016/signcart2/hd_wap_user_e13.php?1'
         self.url_hebi = 'https://huodong2.4399.com/comm/playapp2/m/hd_wap_user_e4.php'
@@ -89,7 +90,6 @@ class Box:
         if content['name'] == '':
             logging.error('【' + self.name + '】未获取到有效用户名！')
         else:
-            
             logging.info('【' + self.name + '】用户:{} 调用login成功！'.format(content['name']))
         print(content)
         list = content['config']
@@ -204,7 +204,12 @@ class Box:
             logging.error("【" + self.name + "】存在应用签到失败，重新执行签到任务！")
             if self.playgame():
                 return True
-
+    # def signup(self):
+    #     url="http://203.107.1.33/123465/sign_d?host=mapi.yxhapi2.com&t=1654641288&s=EAC3E627CEB851F361A9162950F3C896"
+    #     response = requests.get(url,
+    #                             headers=self.headers,
+    #                             cookies=self.cookies)
+    #     print(response.text)
     def hebi(self):
         #626 - 640
         #cid = 637
@@ -333,7 +338,7 @@ class Box:
         url = content['img']
         key = content['key']
         print(url)
-        """
+
         import urllib.request
         try:
             urllib.request.urlretrieve(url, filename="code.jpg")
@@ -341,9 +346,9 @@ class Box:
             print("IOE ERROR")
         except Exception as e:
             print("Exception")
-        """
 
-        code = input()
+        code = self.xunfei.get_word()
+        print(code)
         return code,key
 
     def detect_accelerate(self):
