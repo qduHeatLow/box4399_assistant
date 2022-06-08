@@ -14,8 +14,8 @@ def run_program(name):
               conf.get("essential", "device"), conf.get("essential", "sdevice"), conf.get("essential", "gameid"))
     # xunfei = Xunfei()
     # xunfei.get_word()
-    #box.check()
-    box.hebi()
+    box.check()
+    #box.hebi()
 
 
     #box.detect_accelerate()  # 检查加速卡状态，全自动线程

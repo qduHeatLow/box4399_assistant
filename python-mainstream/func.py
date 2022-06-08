@@ -217,6 +217,8 @@ class Box:
 
 
         for cid in range(626,641):
+            print("------------------------")
+            print("正在执行使用应用id：" , cid)
             self.login_with_cid(cid)
             data = {
                 'ac': 'download',
@@ -230,7 +232,7 @@ class Box:
             response = requests.post(self.url_hebi,
                                      headers=self.headers,
                                      cookies=self.cookies, data=data)
-            print(response.text)
+            #print(response.text)
 
             data = {
                 'ac': 'clickplay',
@@ -244,7 +246,7 @@ class Box:
             response = requests.post(self.url_hebi,
                                      headers=self.headers,
                                      cookies=self.cookies, data=data)
-            print(response.text)
+            #print(response.text)
 
             """
             maxsec = maxsec if maxsec > int(self.delay_time[gid]) / 1000 else int(self.delay_time[gid]) / 1000
@@ -264,7 +266,9 @@ class Box:
         print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
         time.sleep(480)
 
-        for cid in range(626, 631):
+        for cid in range(626, 641):
+            print("------------------------")
+            print("正在执行领取应用id：",cid)
             code, key = self.check()
             data = {
                 'ac': 'checkindentify',
@@ -280,7 +284,7 @@ class Box:
             response = requests.post(self.url_qingqu_check_upload,
                                      headers=self.headers,
                                      cookies=self.cookies, data=data)
-            print(response.text)
+            #print(response.text)
 
 
             data = {
@@ -295,7 +299,7 @@ class Box:
             response = requests.post(self.url_hebi,
                                      headers=self.headers,
                                      cookies=self.cookies, data=data)
-            print(response.text)
+            #print(response.text)
 
             #content = json.loads(response.text)
 
@@ -316,7 +320,7 @@ class Box:
                                      cookies=self.cookies, data=data)
             content = json.loads(response.text)
             print(response.text)
-
+            time.sleep(1)
         """
         for gid in self.num:
             if content['play_stat'][gid] == '0':
@@ -337,7 +341,7 @@ class Box:
         content = json.loads(response.text)
         url = content['img']
         key = content['key']
-        print(url)
+        #print(url)
 
         import urllib.request
         try:
@@ -347,9 +351,15 @@ class Box:
         except Exception as e:
             print("Exception")
 
-        code = self.xunfei.get_word()
-        print(code)
-        return code,key
+        try:
+            code = self.xunfei.get_word()
+            print(code)
+            return code, key
+        except Exception as e:
+            print(e)
+            print("重试验证码中")
+            return self.check()
+
 
     def detect_accelerate(self):
         logging.info("【" + self.name + "】启动加速卡监视线程！")
