@@ -14,14 +14,14 @@ def run_program(name):
               conf.get("essential", "device"), conf.get("essential", "sdevice"), conf.get("essential", "gameid"))
     # xunfei = Xunfei()
     # xunfei.get_word()
-    box.check()
+    #box.check()
     #box.hebi()
 
 
     #box.detect_accelerate()  # 检查加速卡状态，全自动线程
     #box.playgame()  # 自动签到拿积分
-    # con.test_prize()
-
+    box.test_prize()
+    #box.firefox_candy()
 
 if __name__ == '__main__':
     filelist = []

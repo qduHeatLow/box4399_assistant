@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from ocr import Xunfei
 import requests
 import time
@@ -19,7 +21,9 @@ class Box:
         self.url_hebi = 'https://huodong2.4399.com/comm/playapp2/m/hd_wap_user_e4.php'
         self.url_lingqu_check ="https://huodong2.4399.com/identifying_code/identifyCode.https.api.php?ac=pic&type=4&randkey=lingqu&reflash=1"
         self.url_qingqu_check_upload="https://huodong2.4399.com/comm/playapp2/m/hd_wap_user_e4.php"
+        self.url_prize = "https://huodong2.4399.com/comm/qdlb/ajax_e3.php"
         self.name = name
+
 
         if os.path.exists('.\confs\logs'):
             pass
@@ -62,7 +66,7 @@ class Box:
         self.sdevice = parse.unquote(sdevice)
         self.gameid = gameid
 
-        print(self.headers)
+        #print(self.headers)
         # 以下是部分全局变量
         self.num = []
         self.names = []
@@ -122,7 +126,7 @@ class Box:
         response = requests.post(self.url_hebi, headers=self.headers,
                                  cookies=self.cookies, data=data)
 
-        print(response.request.headers)
+        #print(response.request.headers)
         content = json.loads(response.text)
 
         if content['name'] == '':
@@ -204,19 +208,14 @@ class Box:
             logging.error("【" + self.name + "】存在应用签到失败，重新执行签到任务！")
             if self.playgame():
                 return True
-    # def signup(self):
-    #     url="http://203.107.1.33/123465/sign_d?host=mapi.yxhapi2.com&t=1654641288&s=EAC3E627CEB851F361A9162950F3C896"
-    #     response = requests.get(url,
-    #                             headers=self.headers,
-    #                             cookies=self.cookies)
-    #     print(response.text)
+
     def hebi(self):
         #626 - 640
         #cid = 637
 
 
 
-        for cid in range(626,641):
+        for cid in range(600,641):
             print("------------------------")
             print("正在执行使用应用id：" , cid)
             self.login_with_cid(cid)
@@ -266,7 +265,7 @@ class Box:
         print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
         time.sleep(480)
 
-        for cid in range(626, 641):
+        for cid in range(600, 641):
             print("------------------------")
             print("正在执行领取应用id：",cid)
             code, key = self.check()
@@ -333,6 +332,7 @@ class Box:
             if self.playgame():
                 return True
         """
+
     def check(self):
         response = requests.get(self.url_lingqu_check,
                                  headers=self.headers,
@@ -360,12 +360,36 @@ class Box:
             print("重试验证码中")
             return self.check()
 
-
     def detect_accelerate(self):
         logging.info("【" + self.name + "】启动加速卡监视线程！")
         threading.Thread(target=self.detect_main).start()
 
     def detect_main(self):
+        flag = 1
+        self.test_suppleup()
+        while True:
+            if time.strftime("%H", time.localtime()) == '8' and time.strftime("%M", time.localtime()) == '59':
+                threading.Thread(target=self.test_prize).start()
+            try:
+                response = requests.get("https://www.mobayx.com/2016/signcart2/", timeout=0.5)
+                content = response.text
+                soup = BeautifulSoup(content, 'html.parser')
+                s1 = soup.find('li', class_='cd-2')
+                s2 = s1.find_next('a')
+            except:
+                logging.error("【" + self.name + "】=====网络出错，正在重试=====")
+                continue
+            else:
+                if s2.text == '补仓中':
+                    flag = 1
+                    time.sleep(1)
+                else:
+                    if flag:
+                        threading.Thread(target=self.test_accelerate).start()
+                        logging.info("【" + self.name + "】加速卡补货了！")
+                    flag = 0
+
+    def detect_prize_main(self):
         flag = 1
         self.test_suppleup()
         while True:
@@ -634,6 +658,16 @@ class Box:
         big_prize = content['prize_rand']
         target = '-1'
         # 这里需要枚举字典
+        import datetime
+        d1 = date.today()
+        t9 = datetime.time(9, 0, 0)
+        nine_oclock = datetime.datetime.combine(d1, t9)  # 7点抢座时间
+
+        curr_time = datetime.datetime.now()  # 第一个执行的时候休眠到指定时间执行
+        total_seconds = (nine_oclock - curr_time).total_seconds()  # 时间差
+        # print(total_seconds)
+
+        time.sleep(total_seconds - 2)  # 休眠到指定时间
         while True:
             for key in big_prize:
                 item = big_prize[key]
@@ -662,4 +696,22 @@ class Box:
                 logging.error("【" + self.name + "】出现问题,{}".format(content['msg']))
             if time.strftime("%M", time.localtime()) == '5':
                 logging.info("【" + self.name + "】补货时间已过,结束进程！")
+                break
 
+    def firefox_candy(self):
+
+
+        from selenium import webdriver
+
+        # 头信息
+        from selenium.webdriver.firefox.options import Options
+
+        options = Options()
+        options.add_argument('--incognito')
+        options.add_argument(
+             'user-agent="Mozilla/5.0 (Linux; Android 11; GM1910 Build/RKQ1.201022.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/87.0.4280.141 Mobile Safari/537.36 4399GameCenter/6.6.1.31(android;GM1910;11;1440x3060;4G;1747.795;baidu)"')
+        # options.add_argument(self.headers)
+        Path = 'D:/python_tool/geckodriver.exe'
+        wb = webdriver.Firefox(options=options, executable_path=Path)
+        # 进入网页+登录
+        wb.get('https://huodong.4399.cn/game/maintain/game/candyDart/index?hduuid=3yeq5pjyr&id=13630=3#/home')
