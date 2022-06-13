@@ -41,7 +41,16 @@ class Box:
         logging.info("【" + self.name + "】初始化成功！")
         self.cookies = {}
 
-        self.headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 11; GM1910 Build/RKQ1.201022.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/87.0.4280.141 Mobile Safari/537.36 4399GameCenter/6.6.1.31(android;GM1910;11;1440x3060;4G;1747.795;baidu)",
+        # self.headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 11; GM1910 Build/RKQ1.201022.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/87.0.4280.141 Mobile Safari/537.36 4399GameCenter/6.6.1.31(android;GM1910;11;1440x3060;4G;1747.795;baidu)",
+        #                 "Content-Type":"application/x-www-form-urlencoded",
+        #                 "Sec-Fetch-Site":"same-origin",
+        #                 "Sec-Fetch-Mode": "cors",
+        #                 "Sec-Fetch-Dest": "empty",
+        #                 "Referer": "https://huodong2.4399.com/2016/signcart2/",
+        #                 "Accept-Encoding": "gzip, deflate",
+        #                 "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+        #                 }
+        self.headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; P40 Build/N6F26Q; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/81.0.4044.117 Mobile Safari/537.36 4399GameCenter/6.6.1.31(android;P40;7.1.2;1440x2940;WIFI;1747.795;baidu)",
                         "Content-Type":"application/x-www-form-urlencoded",
                         "Sec-Fetch-Site":"same-origin",
                         "Sec-Fetch-Mode": "cors",
@@ -60,7 +69,8 @@ class Box:
         self.scookie = parse.unquote(scookie)
         #self.scookie = "0%7C644844046%7C05c477b1a39f7b88358b9e02d3627841%7C1a4131816%7C3de356aeebe97d7e0dfcd80026ccb552%7C644844046"
         #self.scookie = parse.unquote(smid)
-        self.smid = "202206041012485a32a4dd22c05b95978ae817551fec59006f26ff7e9ea7c90"
+        # self.smid = "202206041012485a32a4dd22c05b95978ae817551fec59006f26ff7e9ea7c90"
+        self.smid = "202206131418175a32a4dd22c05b95978ae817551fec59004d6f4823c3464b0"
 
         self.device = parse.unquote(device)
         self.sdevice = parse.unquote(sdevice)
@@ -129,14 +139,23 @@ class Box:
         #print(response.request.headers)
         content = json.loads(response.text)
 
-        if content['name'] == '':
-            logging.error('【' + self.name + '】未获取到有效用户名！')
-        else:
-            logging.info('【' + self.name + '】用户:{} 调用login成功！'.format(content['name']))
-        print(content)
-        list = content['config']
-        self.names = []
-        self.num = []
+        # if content['name'] == '':
+        #     logging.error('【' + self.name + '】未获取到有效用户名！')
+        # else:
+        #     logging.info('【' + self.name + '】用户:{} 调用login成功！'.format(content['name']))
+        try:
+            print('已完成天数：',content['config']['play_day'])
+            if (int(content['config']['play_day'])>5):
+                return False
+            else:
+                return True
+            # self.names = []
+            # self.num = []
+        except Exception as e:
+                print(content)
+                return True
+
+
 
 
         """for item in list['gameinfo_list']:
@@ -214,11 +233,13 @@ class Box:
         #cid = 637
 
 
-
-        for cid in range(600,641):
+        cid_list=[]
+        for cid in range(300,644):
             print("------------------------")
             print("正在执行使用应用id：" , cid)
-            self.login_with_cid(cid)
+            if(self.login_with_cid(cid)==False):
+                continue
+            cid_list.append(cid)
             data = {
                 'ac': 'download',
                 'cid': cid,
@@ -265,7 +286,7 @@ class Box:
         print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
         time.sleep(480)
 
-        for cid in range(600, 641):
+        for cid in cid_list:
             print("------------------------")
             print("正在执行领取应用id：",cid)
             code, key = self.check()
@@ -318,7 +339,12 @@ class Box:
                                      headers=self.headers,
                                      cookies=self.cookies, data=data)
             content = json.loads(response.text)
-            print(response.text)
+
+            try:
+                result = content['error_msg'].encode('utf-8').decode('unicode-escape')
+                print(result)
+            except Exception as e:
+                print(content)
             time.sleep(1)
         """
         for gid in self.num:

@@ -8,6 +8,7 @@ import threading
 def run_program(name):
     conf = RawConfigParser()
     conf.read('.\confs\\' + name)
+    #conf.read('.\confs2\\' + name)
     box = Box(name, conf.get("essential", "cookies"), conf.get("essential", "headers"),
               conf.get("essential", "smid"),
               conf.get("essential", "scookie"),
@@ -15,12 +16,12 @@ def run_program(name):
     # xunfei = Xunfei()
     # xunfei.get_word()
     #box.check()
-    #box.hebi()
+    box.hebi()
 
 
     #box.detect_accelerate()  # 检查加速卡状态，全自动线程
     #box.playgame()  # 自动签到拿积分
-    box.test_prize()
+    #box.test_prize()
     #box.firefox_candy()
 
 if __name__ == '__main__':

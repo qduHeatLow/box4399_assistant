@@ -64,5 +64,5 @@ class Xunfei:
         content = json.loads(response.text)
         #print(content)
         word = jsonpath.jsonpath(jsonpath.jsonpath(jsonpath.jsonpath(jsonpath.jsonpath(content, '$.data.block')[0][0], '$.line')[0][0], '$.word')[0][0], '$.content')
-
+        word[0][:-1].replace('×','*')
         return eval(word[0][:-1])
