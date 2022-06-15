@@ -50,7 +50,7 @@ class Box:
         #                 "Accept-Encoding": "gzip, deflate",
         #                 "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
         #                 }
-        self.headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 7.1.2; P40 Build/N6F26Q; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/81.0.4044.117 Mobile Safari/537.36 4399GameCenter/6.6.1.31(android;P40;7.1.2;1440x2940;WIFI;1747.795;baidu)",
+        self.headers = {"User-Agent": "Mozilla/5.0 (Linux; Android 10; MIX 2S Build/QKQ1.190828.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.101 Mobile Safari/537.36 4399GameCenter/6.4.1.33(android;MIX 2S;10;1080x2030;WIFI;1705.774;wap4399)",
                         "Content-Type":"application/x-www-form-urlencoded",
                         "Sec-Fetch-Site":"same-origin",
                         "Sec-Fetch-Mode": "cors",
@@ -70,7 +70,7 @@ class Box:
         #self.scookie = "0%7C644844046%7C05c477b1a39f7b88358b9e02d3627841%7C1a4131816%7C3de356aeebe97d7e0dfcd80026ccb552%7C644844046"
         #self.scookie = parse.unquote(smid)
         # self.smid = "202206041012485a32a4dd22c05b95978ae817551fec59006f26ff7e9ea7c90"
-        self.smid = "202206131418175a32a4dd22c05b95978ae817551fec59004d6f4823c3464b0"
+        self.smid = "202206141502325a32a4dd22c05b95978ae817551fec5900bce3108030ca4c0"
 
         self.device = parse.unquote(device)
         self.sdevice = parse.unquote(sdevice)
@@ -234,7 +234,7 @@ class Box:
 
 
         cid_list=[]
-        for cid in range(300,644):
+        for cid in range(10,643):
             print("------------------------")
             print("正在执行使用应用id：" , cid)
             if(self.login_with_cid(cid)==False):
@@ -286,6 +286,7 @@ class Box:
         print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
         time.sleep(480)
 
+        credit = 0
         for cid in cid_list:
             print("------------------------")
             print("正在执行领取应用id：",cid)
@@ -341,11 +342,16 @@ class Box:
             content = json.loads(response.text)
 
             try:
-                result = content['error_msg'].encode('utf-8').decode('unicode-escape')
+                if content['error_msg'][:1].isdigit():
+                    result = content['error_msg'][:2]
+                    credit = credit + int(content['error_msg'][:2])
+                else:
+                    result = content['error_msg'].encode('utf-8').decode('unicode-escape')
                 print(result)
             except Exception as e:
                 print(content)
             time.sleep(1)
+        print(credit)
         """
         for gid in self.num:
             if content['play_stat'][gid] == '0':
